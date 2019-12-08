@@ -6,12 +6,16 @@ fgbg = cv.bgsegm.createBackgroundSubtractorMOG(history=5)
 while(1):
     ret, frame = cap.read()
     imgray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    # ret, thresh = cv.threshold(imgray, 127, 255, 0)
+    ret, thresh1 = cv.threshold(imgray, 127, 255, 0)
+
     thresh = fgbg.apply(imgray)
     motionCounter = sum(sum(thresh))
-    contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE,
+
+    print(motionCounter)
+    if motionCounter > 110000:
+        contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE,
                                                cv.CHAIN_APPROX_SIMPLE)
-    cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
+        cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
 
     # fgmask = fgbg.apply(frame)
     # cv.imshow('frame',np.stack(np.multiply(fgmask,frame[:,:,0]), np.multiply(fgmask,frame[:,:,1]),np.multiply(fgmask,frame[:,:,2])))
